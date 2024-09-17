@@ -1,7 +1,4 @@
-
-
 public class Maze {
-
     /* maze details */
     private int mazeType;
     private int mazeLength;
@@ -11,18 +8,27 @@ public class Maze {
     /* define other data variables here */
 
 
+    public Maze() {}
+
     public Maze(int mazeType, int mazeLength, int mazeWidth, long seed) {
         // intialise the maze here 
         //add the position of all the entities
         LocationGenerator generator = new LocationGenerator(seed);
     }
 
-    
+    public void mazeMenu() {
+        System.out.println("Please select a maze type.");
+        System.out.println("Press 1 to select lower triangle maze.");
+        System.out.println("Press 2 to select upper triangle maze.");
+        System.out.println("Press 3 to select horizontal maze.");
+        System.out.print("> ");
+        this.mazeType = Integer.parseInt(GameEngine.keyboard.nextLine());
+    }
 
     
 
    
-    private void generatePosition(LocationGenerator generator /* you can add other parameters here*/ ) {
+    private void generatePosition(LocationGenerator generator) {
         while(true) {
             int colPos = generator.generatePosition(1, this.mazeLength-2);
             int rowPos = generator.generatePosition(2, this.mazeWidth-2);
@@ -43,7 +49,5 @@ public class Maze {
         System.out.println("Press Q to exit.");
         System.out.print("> ");
     }
-
-    
 }
 
