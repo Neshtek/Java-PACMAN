@@ -35,10 +35,6 @@ public class Constants {
     public static final char MAZE_DOT = '.';
     public static final char MAZE_FOOD = '*';
     public static final char PACMAN = 'P';
-    public static final char R = 'R';
-    public static final char B = 'B';
-    public static final char G = 'G';
-    public static final char Y = 'Y';
 
     public static final char UP = 'W';
     public static final char DOWN = 'S';

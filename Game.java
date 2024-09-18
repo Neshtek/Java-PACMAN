@@ -1,6 +1,8 @@
 public class Game {
     private int pacmanRow;
     private int pacmanCol;
+    private int pacmanPrevRow;
+    private int pacmanPrevCol;
 
     private int noOfPlayers;
     private int multiPlayerCounter;
@@ -17,6 +19,8 @@ public class Game {
         this.isGameCompleted = true;
         this.pacmanCol = Constants.PACMAN_INITIAL_POS;
         this.pacmanRow = Constants.PACMAN_INITIAL_POS;
+        this.pacmanPrevCol = Constants.PACMAN_INITIAL_POS;
+        this.pacmanPrevRow = Constants.PACMAN_INITIAL_POS;
         this.multiPlayerCounter = 0;
     }
 
@@ -37,6 +41,7 @@ public class Game {
             if (this.isGameCompleted != false) {
                 Game.gameCounter++;
                 this.score = new ScoreBoard(Game.gameCounter);
+                this.isGameCompleted = false;
             }
             if (this.noOfPlayers == Constants.MULTI_PLAYER && multiPlayerCounter > 0) {
                 maze = new Maze(maze);
@@ -61,7 +66,7 @@ public class Game {
                     this.endGame();
                     break;
                 }
-                maze.setPacmanPos(this.pacmanRow, this.pacmanCol);
+                maze.setPacmanPos(this.pacmanRow, this.pacmanCol, this.pacmanPrevRow, this.pacmanPrevCol);
                 maze.printGrid();
                 this.printMovePacmanMenu();
                 char movementChoice = Character.toUpperCase(GameEngine.keyboard.nextLine().charAt(0));
@@ -90,15 +95,19 @@ public class Game {
     private void movePacmanMenu(char movementChoice) {
         switch (movementChoice) {
             case Constants.UP:
+                this.pacmanPrevRow = this.pacmanRow;
                 this.pacmanRow--;
                 break;
             case Constants.DOWN:
+                this.pacmanPrevRow = this.pacmanRow;
                 this.pacmanRow++;
                 break;
             case Constants.LEFT:
+                this.pacmanPrevCol = this.pacmanCol;
                 this.pacmanCol--;
                 break;
             case Constants.RIGHT:
+                this.pacmanPrevCol = this.pacmanCol;
                 this.pacmanCol++;
                 break;
             default:
@@ -124,40 +133,37 @@ public class Game {
     }
 
     private String executeMove(Maze maze, char movementChoice) {
-        switch (maze.getGrid()[pacmanRow][pacmanCol]) {
-            case Constants.MAZE_BOUNDARY:
-                this.score.setHits();
-                this.correctPos(movementChoice);
-                return Messages.BOUNDARY_HIT;
-            case Constants.MAZE_WALL:
-                this.score.setHits();
-                this.correctPos(movementChoice);
+        char currentItem = maze.getGrid()[this.pacmanRow][this.pacmanCol];
+        if (currentItem == Constants.MAZE_BOUNDARY || currentItem == Constants.MAZE_WALL) {
+            this.score.setHits();
+            this.correctPos(movementChoice);
+            if (currentItem == Constants.MAZE_WALL)
                 return Messages.WALL_HIT;
-            case Constants.MAZE_FOOD:
-                this.powerUp++;
-                this.score.setMoves();
-                this.score.eatFood();
-                return Messages.POWER_UP;
-            case Constants.R:
-            case Constants.B:
-            case Constants.G:
-            case Constants.Y:
-                if (this.powerUp == 0) {
-                    this.score.killPacman();
-                    return Messages.DEATH;
-                }
-                else if (powerUp > 0) {
-                    this.powerUp--;
-                    this.score.setMoves();
-                    this.score.killMonster();
-                    int ghostIndex = GhostType.valueOf(Character.toString(maze.getGrid()[pacmanRow][pacmanCol])).ordinal();
-                    maze.setGhostKilled(ghostIndex);
-                    return Messages.MONSTER_KILLED;
-                }
-            default:
-                this.score.setMoves();
-                return null;
+            else return Messages.BOUNDARY_HIT;
+        } else if (currentItem == Constants.MAZE_FOOD) {
+            this.powerUp++;
+            this.score.setMoves();
+            this.score.eatFood();
+            return Messages.POWER_UP;
+        } else {
+            for (GhostType ghost : GhostType.values()) {
+                if (currentItem == ghost.toString().charAt(0))
+                    if (this.powerUp == 0) {
+                        this.score.killPacman();
+                        return Messages.DEATH;
+                    }
+                    else if (this.powerUp > 0) {
+                        this.powerUp--;
+                        this.score.setMoves();
+                        this.score.killMonster();
+                        int ghostIndex = GhostType.valueOf(Character.toString(currentItem)).ordinal();
+                        maze.setGhostKilled(ghostIndex);
+                        return Messages.MONSTER_KILLED;
+                    }
+            }
         }
+        this.score.setMoves();
+        return null;
     }
 
     private void endGame() {

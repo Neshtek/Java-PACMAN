@@ -79,7 +79,7 @@ public class ScoreBoard {
     }
 
     public void calculateScore(Maze maze) {
-        this.finalScore += (20 * this.getIntFromBoolean(this.isPacmanDead));
+        this.finalScore += (20 * this.getIntFromBoolean(!this.isPacmanDead));
         for (boolean ghostStatus : maze.getGhostKilled())
             this.finalScore += (10 * this.getIntFromBoolean(ghostStatus));
         this.finalScore += (5 * this.foodEaten);

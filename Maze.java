@@ -34,6 +34,9 @@ public class Maze {
         this.isGhostKilled = new boolean[4];
         Arrays.fill(isGhostKilled, false);
         this.generator = new LocationGenerator(seed);
+
+        this.createGrid();
+        this.generatePosition(generator);
     }
 
     public char[][] getGrid() {
@@ -63,8 +66,8 @@ public class Maze {
         this.isGhostKilled[index] = true;
     }
 
-    public void setPacmanPos(int pacmanRow, int pacmanCol) {
-        this.createGrid();
+    public void setPacmanPos(int pacmanRow, int pacmanCol, int pacmanPrevRow, int pacmanPrevCol) {
+        this.grid[pacmanPrevRow][pacmanPrevCol] = Constants.MAZE_DOT;
         this.grid[pacmanRow][pacmanCol] = Constants.PACMAN;
     }
 
