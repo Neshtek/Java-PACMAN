@@ -9,6 +9,8 @@ public class Constants {
     public static final String MOVES = "# Moves";
     public static final String SCORE = "# Score";
 
+    public static final String NO = "N";
+
     public static final String PLAYER_ONE = "Player 1";
     public static final String PLAYER_TWO = "Player 2";
 
@@ -36,11 +38,11 @@ public class Constants {
     public static final char MAZE_FOOD = '*';
     public static final char PACMAN = 'P';
 
-    public static final char UP = 'W';
-    public static final char DOWN = 'S';
-    public static final char LEFT = 'A';
-    public static final char RIGHT = 'D';
-    public static final char QUIT = 'Q';
+    public static final String UP = "W";
+    public static final String DOWN = "S";
+    public static final String LEFT = "A";
+    public static final String RIGHT = "D";
+    public static final String QUIT = "Q";
 
     public static final int PACMAN_INITIAL_POS = 1;
 }

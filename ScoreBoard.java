@@ -73,15 +73,10 @@ public class ScoreBoard {
         this.isPacmanDead = true;
     }
 
-    private int getIntFromBoolean(boolean booleanValue) {
-        int intValue = booleanValue ? 1 : 0;
-        return intValue;
-    }
-
     public void calculateScore(Maze maze) {
-        this.finalScore += (20 * this.getIntFromBoolean(!this.isPacmanDead));
-        for (boolean ghostStatus : maze.getGhostKilled())
-            this.finalScore += (10 * this.getIntFromBoolean(ghostStatus));
+        int isPacmanDeadInt = this.isPacmanDead ? 0 : 1;
+        this.finalScore += (20 * isPacmanDeadInt);
+        this.finalScore += (10 * this.monstersKilled);
         this.finalScore += (5 * this.foodEaten);
         this.finalScore -= (0.5 * this.hits);
         this.finalScore -= (0.25 * this.moves);

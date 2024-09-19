@@ -17,6 +17,7 @@ public class Messages {
     public static final String NO_PAUSED_GAME = "No paused game found. Select option 2 from main menu to start a new game.";
     public static final String RESTART_GAME = "Restart your game from the last position you saved.";
     public static final String NO_COMPLETED_GAMES = "No completed games found.";
+    public static final String PLAYER_WINS = "Player %d wins. Returning to main menu.\n";
     public static final String GAME_INCOMPLETE = "Previous game hasn't ended yet. Do you want to discard previous game?\n" + //
                                                 "Press N to go back to main menu to resume the game or else press any key to discard.\n" + //
                                                 "> ";

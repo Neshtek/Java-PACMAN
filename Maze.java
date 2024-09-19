@@ -19,11 +19,13 @@ public class Maze {
         this.mazeType = maze.mazeType;
         this.mazeLength = maze.mazeLength;
         this.mazeWidth = maze.mazeWidth;
-        this.grid = new char[mazeWidth][mazeLength];
+        this.grid = new char[this.mazeWidth][this.mazeLength];
+        for (int i = 0; i < maze.mazeWidth; i++)
+            for (int j = 0; j < maze.mazeLength; j++)
+                this.grid[i][j] = maze.grid[i][j];
         this.isGhostKilled = new boolean[4];
         Arrays.fill(isGhostKilled, false);
         this.generator = maze.generator;
-        
     }
 
     public Maze(int mazeType, int mazeLength, int mazeWidth, long seed) {
@@ -66,8 +68,9 @@ public class Maze {
         this.isGhostKilled[index] = true;
     }
 
-    public void setPacmanPos(int pacmanRow, int pacmanCol, int pacmanPrevRow, int pacmanPrevCol) {
-        this.grid[pacmanPrevRow][pacmanPrevCol] = Constants.MAZE_DOT;
+    public void setPacmanPos(int pacmanRow, int pacmanCol, int pacmanPrevRow, int pacmanPrevCol, String message) {
+        if (message == null || (!message.equals(Messages.BOUNDARY_HIT) && !message.equals(Messages.WALL_HIT)))
+            this.grid[pacmanPrevRow][pacmanPrevCol] = Constants.MAZE_DOT;
         this.grid[pacmanRow][pacmanCol] = Constants.PACMAN;
     }
 
@@ -80,45 +83,49 @@ public class Maze {
             this.grid[rowCounter][0] = Constants.MAZE_BOUNDARY;
             this.grid[rowCounter][this.mazeLength - 1] = Constants.MAZE_BOUNDARY;
         }
-        for (int rowCounter = 1; rowCounter < this.mazeWidth - 1; rowCounter++)
-            for (int colCounter = 1; colCounter < this.mazeLength - 1; colCounter++) {
+        for (int rowCounter = 1; rowCounter < (this.mazeWidth - 1); rowCounter++)
+            for (int colCounter = 1; colCounter < (this.mazeLength - 1); colCounter++) {
                 this.grid[rowCounter][colCounter] = Constants.MAZE_WALL;
                 switch (this.mazeType) {
-                    case 1:
+                    case Constants.LOWER_TRIANGLE:
                         if (colCounter <= rowCounter)
                             this.grid[rowCounter][colCounter] = Constants.MAZE_DOT;
                         break;
-                    case 2:
-                        if (colCounter > rowCounter)
+                    case Constants.UPPER_TRIANGLE:
+                        if (colCounter >= rowCounter)
                             this.grid[rowCounter][colCounter] = Constants.MAZE_DOT;
                         break;
-                    case 3:
+                    case Constants.HORIZONTAL:
                         if (rowCounter % 2 == 1 || colCounter == 1 || colCounter == this.mazeLength - 2)
                             this.grid[rowCounter][colCounter] = Constants.MAZE_DOT;
                         break;
                 }
             }
-        this.generatePosition(this.generator);
     }
 
-    private void generatePosition(LocationGenerator generator) {
-        for (int ghostIndex = 0; ghostIndex < this.isGhostKilled.length; ghostIndex++)
-            if (this.isGhostKilled[ghostIndex] == false) {
-                int colPos = generator.generatePosition(1, this.mazeLength-2);
-                int rowPos = generator.generatePosition(2, this.mazeWidth-2);
-                if (this.grid[rowPos][colPos] == Constants.MAZE_DOT)
-                    this.grid[rowPos][colPos] = GhostType.values()[ghostIndex].name().charAt(0);
-            }
-
-        int foodCounter = 0;
-        while (foodCounter < Constants.FOOD_NUM) {
+    private void placeGhostOrFood(LocationGenerator generator, int ghostIndex, boolean foodFlag) {
+        while (true) {
             int colPos = generator.generatePosition(1, this.mazeLength-2);
             int rowPos = generator.generatePosition(2, this.mazeWidth-2);
             if (this.grid[rowPos][colPos] == Constants.MAZE_DOT) {
-                this.grid[rowPos][colPos] = Constants.MAZE_FOOD;
+                if (!foodFlag)
+                    this.grid[rowPos][colPos] = GhostType.values()[ghostIndex].name().charAt(0);
+                else
+                    this.grid[rowPos][colPos] = Constants.MAZE_FOOD;
+                return;
             }
-            foodCounter++;
+        }
+    }
+
+    private void generatePosition(LocationGenerator generator) {
+        for (int ghostIndex = 0; ghostIndex < this.isGhostKilled.length; ghostIndex++) {
+            if (this.isGhostKilled[ghostIndex] == false) {
+                this.placeGhostOrFood(generator, ghostIndex, false);
+            }
+        }
+
+        for (int foodCounter = 0; foodCounter < Constants.FOOD_NUM; foodCounter++) {
+            this.placeGhostOrFood(generator, foodCounter, true);
         }
     }
 }
-
