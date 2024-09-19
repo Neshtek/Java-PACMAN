@@ -1,6 +1,7 @@
 public class Constants {
     public static final String LEADERBOARD_HEADER_FORMAT = "|%8s|%15s|%15s|%16s|%8s|%8s|%8s|%n";
     public static final String LEADERBOARD_FORMAT = "|%8d|%15s|%15d|%16d|%8d|%8d|%8.2f|%n";
+    public static final String LEADERBOARD_SEPERATOR = "|========|===============|===============|================|========|========|========|";
     public static final String GAME_NO = "# Game";
     public static final String PLAYER_NAME = "Player Name";
     public static final String FOOD_EATEN = "# Food Eaten";

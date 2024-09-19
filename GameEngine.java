@@ -49,9 +49,16 @@ public class GameEngine {
         if (this.noOfPlayers == Constants.MULTI_PLAYER && this.game.checkGameCompletion()) {
             ScoreBoard scoreOne = this.completedGames[this.completedGames.length - 2];
             ScoreBoard scoreTwo = this.completedGames[this.completedGames.length - 1];
-            if (scoreOne.getFinalScore() >= scoreTwo.getFinalScore())
+            if (scoreOne.getFinalScore() >= scoreTwo.getFinalScore()) {
                 System.out.printf(Messages.PLAYER_WINS, Constants.SINGLE_PLAYER);
-            else System.out.printf(Messages.PLAYER_WINS, Constants.MULTI_PLAYER);
+                this.completedGames[this.completedGames.length - 2] = scoreOne;
+                this.completedGames = Arrays.copyOf(this.completedGames, this.completedGames.length - 1);
+            }
+            else {
+                System.out.printf(Messages.PLAYER_WINS, Constants.MULTI_PLAYER);
+                this.completedGames[this.completedGames.length - 2] = scoreTwo;
+                this.completedGames = Arrays.copyOf(this.completedGames, this.completedGames.length - 1);
+            }
         }
     }
     
@@ -106,19 +113,17 @@ public class GameEngine {
 
     private void mainMenu(int mainChoice) {
         switch (mainChoice) {
-
             case Constants.SELECT_MAZE:
                 this.setMaze();
                 System.out.println(Messages.MAZE_SET);
+                this.game = new Game();
                 break;
 
-
             case Constants.PLAY_GAME:
-                this.game = new Game();
                 if (this.maze == null) {
                     System.out.println(Messages.MAZE_UNSET);
                     break;
-                } else if (!this.game.checkGameCompletion()) {
+                } else if (this.game.checkGameCompletion() == false) {
                     System.out.print(Messages.GAME_INCOMPLETE);
                     String discardChoice = keyboard.nextLine().toUpperCase();
                     if (discardChoice.equals(Constants.NO))
@@ -127,14 +132,15 @@ public class GameEngine {
                         this.maze = null;
                         this.setMaze();
                         System.out.println(Messages.NEW_MAZE_SET);
+                        this.game = new Game();
                     }
                 }
                 if (this.noOfPlayers == Constants.MULTI_PLAYER)
                     this.mazeCopy = new Maze(maze);
                 int multiPlayerCounter = 0;
+                this.gameCounter++;
                 do {
                     System.out.println(Messages.START_GAME);
-                    this.gameCounter++;
                     this.score = new ScoreBoard(this.gameCounter);
                     if (multiPlayerCounter > 0) {
                         this.game = new Game();
@@ -159,7 +165,6 @@ public class GameEngine {
                 this.printWinner();
                 break;
 
-
             case Constants.RESUME_GAME:
                 if (this.maze == null) {
                     System.out.println(Messages.MAZE_UNSET);
@@ -172,7 +177,6 @@ public class GameEngine {
                         do {
                             if (multiPlayerCounter > 0) {                                
                                 System.out.println(Messages.START_GAME);
-                                this.gameCounter++;
                                 this.maze = this.mazeCopy;
                                 this.game = new Game();
                                 this.score = new ScoreBoard(this.gameCounter);
@@ -205,13 +209,13 @@ public class GameEngine {
                 System.out.println(Messages.NO_PAUSED_GAME);
                 break;
 
-
             case Constants.VIEW_SCORES:
                 if (this.completedGames.length == 0) {
                     System.out.println(Messages.NO_COMPLETED_GAMES);
                     break;
                 } else {
                     System.out.printf(Constants.LEADERBOARD_HEADER_FORMAT, Constants.GAME_NO, Constants.PLAYER_NAME, Constants.FOOD_EATEN, Constants.MONSTER_KILLED, Constants.HITS, Constants.MOVES, Constants.SCORE);
+                    System.out.println(Constants.LEADERBOARD_SEPERATOR);
                     for (int gameIndex = 0; gameIndex < this.completedGames.length; gameIndex++) {
                         System.out.printf(Constants.LEADERBOARD_FORMAT, 
                                         this.completedGames[gameIndex].getGameNumber(), 
@@ -224,7 +228,6 @@ public class GameEngine {
                     }
                 }
                 break;
-
 
             default:
                 System.out.println(Messages.INVALID_INPUT);
