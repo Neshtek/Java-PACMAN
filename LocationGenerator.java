@@ -1,5 +1,10 @@
 import java.util.Random;
 
+/**
+ * This class contains the random number generator for the positions of food and ghosts.
+ * @version ver 1.0
+ * @author Neelaksh Tayal 1627659
+ */
 public final class LocationGenerator {
 
     private Random random;

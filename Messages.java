@@ -1,3 +1,8 @@
+/**
+ * This class contains the various messages that are displayed across the program.
+ * @version ver 1.0
+ * @author Neelaksh Tayal 1627659
+ */
 public class Messages {
     public static final String INVALID_ARGS = "Invalid Inputs to set layout. Exiting the program now.";
     public static final String INVALID_INPUT = "Invalid Input.";

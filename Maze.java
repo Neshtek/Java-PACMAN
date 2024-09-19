@@ -1,20 +1,30 @@
 import java.util.Arrays;
 
+/**
+ * This class handles the functioning of the maze and contains all its details.
+ * @version ver 1.0
+ * @author Neelaksh Tayal 1627659
+ */
 public class Maze {
-    /* maze details */
     private int mazeType;
     private int mazeLength;
     private int mazeWidth;
     private char[][] grid;
-
-    /* define other data variables here */
     private LocationGenerator generator;
     private boolean[] isGhostKilled;
     
+    // enum for all ghost.
     enum GhostType {R, B, G, Y}
 
+    /**
+     * The default constructor for the Maze class.
+     */
     public Maze() {}
 
+    /**
+     * The copy constructor for the Maze class.
+     * @param maze
+     */
     public Maze(Maze maze) {
         this.mazeType = maze.mazeType;
         this.mazeLength = maze.mazeLength;
@@ -28,6 +38,13 @@ public class Maze {
         this.generator = maze.generator;
     }
 
+    /**
+     * The parameterized constructor for the Maze class.
+     * @param mazeType An integer value that contains the user choice for maze type.
+     * @param mazeLength An integer value that contains the length of the maze.
+     * @param mazeWidth An integer value that contains the width of the maze.
+     * @param seed A long integer value that contains the seed for the random number generator.
+     */
     public Maze(int mazeType, int mazeLength, int mazeWidth, long seed) {
         this.mazeType = mazeType;
         this.mazeLength = mazeLength;
@@ -38,17 +55,29 @@ public class Maze {
         this.generator = new LocationGenerator(seed);
 
         this.createGrid();
-        this.generatePosition(generator);
+        this.placeGhostOrFoodBackbone(generator);
     }
 
+    /**
+     * A getter method for the 2-D grid character array.
+     * @return
+     */
     public char[][] getGrid() {
         return this.grid;
     }
 
+    /**
+     * A getter method for the isGhostKilled boolean array.
+     * @return
+     */
     public boolean[] getGhostKilled() {
         return this.isGhostKilled;
     }
 
+    /**
+     * This method determines if all the ghosts in the current game are dead.
+     * @return A boolean value that is true if all ghosts are dead.
+     */
     public boolean areAllGhostsDead() {
         for (boolean deadGhost : this.isGhostKilled)
             if (!deadGhost)
@@ -56,6 +85,9 @@ public class Maze {
         return true;
     }
 
+    /**
+     * This method prints the current state of the maze.
+     */
     public void printGrid() {
         for (char[] mazeRow : this.grid) {
             for (char mazeElement : mazeRow)
@@ -64,16 +96,35 @@ public class Maze {
         }
     }
 
+    /**
+     * A setter method to set the value at a particular index to true for the isGhostKilled boolean array.
+     * @param index An integer value that contains the index that needs to be modified.
+     */
     public void setGhostKilled(int index) {
         this.isGhostKilled[index] = true;
     }
 
+    /**
+     * This method updates the current position of pacman.
+     * @param pacmanRow An integer value that contains the current row coordinate of pacman.
+     * @param pacmanCol An integer value that contains the current column coordinate of pacman.
+     * @param pacmanPrevRow An integer value that contains the last row coordinate of pacman.
+     * @param pacmanPrevCol An integer value that contains the last column coordinate of pacman.
+     * @param message A String value that contains the message to be printed based on pacman's position.
+     */
     public void setPacmanPos(int pacmanRow, int pacmanCol, int pacmanPrevRow, int pacmanPrevCol, String message) {
+        
+        // if anything happened other than pacman hitting a wall/boundary, place a '.' in the last position of pacman.
         if (message == null || (!message.equals(Messages.BOUNDARY_HIT) && !message.equals(Messages.WALL_HIT)))
             this.grid[pacmanPrevRow][pacmanPrevCol] = Constants.MAZE_DOT;
+        
+        // update pacman's position.
         this.grid[pacmanRow][pacmanCol] = Constants.PACMAN;
     }
 
+    /**
+     * This method creates the barebones maze based on the user's choice of maze type.
+     */
     private void createGrid() {
         for (int colCounter = 0; colCounter < this.mazeLength; colCounter++) {
             this.grid[0][colCounter] = Constants.MAZE_BOUNDARY;
@@ -103,6 +154,12 @@ public class Maze {
             }
     }
 
+    /**
+     * This method places food or ghosts at a randomly generated position.
+     * @param generator A LocationGenerator object that is the random number generator.
+     * @param ghostIndex An integer value that details the index of the ghost to be placed.
+     * @param foodFlag A boolean flag that is true if food is to be placed, and false for ghosts.
+     */
     private void placeGhostOrFood(LocationGenerator generator, int ghostIndex, boolean foodFlag) {
         while (true) {
             int colPos = generator.generatePosition(1, this.mazeLength-2);
@@ -117,7 +174,11 @@ public class Maze {
         }
     }
 
-    private void generatePosition(LocationGenerator generator) {
+    /**
+     * This method is the backbone of the placeGhostOrFood method.
+     * @param generator A LocationGenerator object that is the random number generator.
+     */
+    private void placeGhostOrFoodBackbone(LocationGenerator generator) {
         for (int ghostIndex = 0; ghostIndex < this.isGhostKilled.length; ghostIndex++) {
             if (this.isGhostKilled[ghostIndex] == false) {
                 this.placeGhostOrFood(generator, ghostIndex, false);
@@ -125,6 +186,7 @@ public class Maze {
         }
 
         for (int foodCounter = 0; foodCounter < Constants.FOOD_NUM; foodCounter++) {
+            // foodCounter is used as a placeholder parameter.
             this.placeGhostOrFood(generator, foodCounter, true);
         }
     }

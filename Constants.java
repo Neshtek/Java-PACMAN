@@ -1,3 +1,8 @@
+/**
+ * This class contains the various constant values used across the program.
+ * @version ver 1.0
+ * @author Neelaksh Tayal 1627659
+ */
 public class Constants {
     public static final String LEADERBOARD_HEADER_FORMAT = "|%8s|%15s|%15s|%16s|%8s|%8s|%8s|%n";
     public static final String LEADERBOARD_FORMAT = "|%8d|%15s|%15d|%16d|%8d|%8d|%8.2f|%n";
