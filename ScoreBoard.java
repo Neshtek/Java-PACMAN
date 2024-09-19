@@ -75,11 +75,6 @@ public class ScoreBoard {
 
     public void calculateScore(Maze maze) {
         int isPacmanDeadInt = this.isPacmanDead ? 0 : 1;
-        this.finalScore += (20 * isPacmanDeadInt);
-        this.finalScore += (10 * this.monstersKilled);
-        this.finalScore += (5 * this.foodEaten);
-        this.finalScore -= (0.5 * this.hits);
-        this.finalScore -= (0.25 * this.moves);
+        this.finalScore = (5 * this.foodEaten) + (10 * this.monstersKilled) - (0.5 * this.hits) - (0.25 * this.moves) + (20 * isPacmanDeadInt);
     }
-
 }

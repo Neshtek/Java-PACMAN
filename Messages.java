@@ -27,6 +27,6 @@ public class Messages {
                 "  > You gain 10 more points for every monster you killed.\n" + //
                 "  > You gain 5 points for every special food that you have eaten.\n" + //
                 "  > You lose 0.5 point when you hit the wall/boundary.\n" + //
-                "  > You lost 0.25 points for every move.\n" + //
+                "  > You lose 0.25 points for every move.\n" + //
                 "  > Score = 5 * foodEaten + 10 * monsterKilled - 0.5 * numOfHits - 0.25 * numOfMoves  +  20 if not dead.";
 }

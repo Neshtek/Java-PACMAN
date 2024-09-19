@@ -133,6 +133,7 @@ public class GameEngine {
                     this.mazeCopy = new Maze(maze);
                 int multiPlayerCounter = 0;
                 do {
+                    System.out.println(Messages.START_GAME);
                     this.gameCounter++;
                     this.score = new ScoreBoard(this.gameCounter);
                     if (multiPlayerCounter > 0) {
@@ -145,7 +146,6 @@ public class GameEngine {
                         System.out.printf(Messages.PLAYER_GAME_START, Constants.SINGLE_PLAYER);
                     }
 
-                    System.out.println(Messages.START_GAME);
                     this.game.startGame(this.maze, this.score);
 
                     if (this.game.checkGameCompletion()) {
@@ -170,7 +170,8 @@ public class GameEngine {
                         multiPlayerCounter = 0;
                         System.out.printf(Messages.PLAYER_GAME_START, Constants.SINGLE_PLAYER);
                         do {
-                            if (multiPlayerCounter > 0) {
+                            if (multiPlayerCounter > 0) {                                
+                                System.out.println(Messages.START_GAME);
                                 this.gameCounter++;
                                 this.maze = this.mazeCopy;
                                 this.game = new Game();
